@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Detail Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>User Details Form</h2>
+    <form id="resumeForm" action="http://localhost:8000/submit" method="post">
+      <!-- User Details Section -->
+      <div id="user_details" class="form-section">
+        <h3>User Details</h3>
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" name="name" id="name" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input type="text" name="address" id="address" placeholder="Enter your address" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone:</label>
+          <input type="number" name="phone" id="phone" placeholder="Enter your phone number" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="password" placeholder="Enter your password" required>
+        </div>
+      </div>
+
+      <!-- Education Section -->
+      <div id="education" class="form-section">
+        <h3>Education Details</h3>
+        <div class="form-group">
+          <label for="school">School:</label>
+          <input type="text" name="school" id="school" placeholder="Enter your school name">
+        </div>
+        <div class="form-group">
+          <label for="level">Level:</label>
+          <select name="level" id="level">
+            <option value="" disabled selected>Select level</option>
+            <option value="phd">PhD</option>
+            <option value="masters">Masters</option>
+            <option value="bachelors">Bachelors</option>
+            <option value="plus2">+2</option>
+            <option value="higher_secondary">Higher Secondary</option>
+            <option value="lower_secondary">Lower Secondary</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="year">Year:</label>
+          <input type="number" name="year" id="year" placeholder="Enter year">
+        </div>
+      </div>
+
+      <!-- Work Experience Section -->
+      <div id="work_experience" class="form-section">
+        <h3>Work Experience</h3>
+        <div class="form-group">
+          <label for="company">Company:</label>
+          <input type="text" name="company" id="company" placeholder="Enter your company name">
+        </div>
+        <div class="form-group">
+          <label for="position">Position:</label>
+          <input type="text" name="position" id="position" placeholder="Enter your position">
+        </div>
+        <div class="form-group">
+          <label for="duties">Duties:</label>
+          <input type="text" name="duties" id="duties" placeholder="Enter your duties">
+        </div>
+        <div class="form-group">
+          <label for="work_year">Work Year:</label>
+          <input type="number" name="work_year" id="work_year" placeholder="Enter work year">
+        </div>
+        <div class="form-group">
+          <label for="skills">Skills:</label>
+          <input type="text" name="skills" id="skills" placeholder="Enter your skills">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+        <button type="submit">Submit</button>
+      </div>
+      <script>
+        document.getElementById("resumeForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+  
+        const formData = {
+          name: document.getElementById("name").value,
+          address: document.getElementById("address").value,
+  
+          phone: document.getElementById("phone").value,
+          password: document.getElementById("password").value,
+          email: document.getElementById("email").value,
+          school:document.getElementById("school").value,
+          level:document.getElementById("level").value,
+          year:document.getElementById("year").value,
+          company:document.getElementById("company").value,
+          position:document.getElementById("position").value,
+          duties:document.getElementById("duties").value,
+          work_year:document.getElementById("work_year").value,
+          skills:document.getElementById("skills").value,
+  
+   };
+  
+        try {
+          const response = await fetch("http://localhost:8000/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+  
+          if (response.ok) {
+            // Open the PDF in a new tab
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Resume.pdf";
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            document.getElementById("resumeForm").reset();
+          } else {
+            alert("Failed to generate resume. Check the server logs.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      });
+  
+      </script>
+    </form>
+  </div>
+</body>
+</html>
